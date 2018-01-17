@@ -1,2 +1,5 @@
 Guide/Library
 Guide/Temp
+.csproj
+.sln
+Guide/.vs
