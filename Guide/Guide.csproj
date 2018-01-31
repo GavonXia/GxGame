@@ -87,6 +87,7 @@
     <Compile Include="Assets\Example\src\DebugTest.cs" />
     <Compile Include="Assets\Example\src\GameObjectTest.cs" />
     <Compile Include="Assets\Example\src\InputTest.cs" />
+    <Compile Include="Assets\Example\src\LifetimeTest.cs" />
     <Compile Include="Assets\Example\src\TransformTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
