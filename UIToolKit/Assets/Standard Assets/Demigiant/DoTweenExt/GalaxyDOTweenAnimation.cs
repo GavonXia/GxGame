@@ -14,8 +14,8 @@ namespace DG.Tweening
     /// <summary>
     /// Attach this to a GameObject to create a tween
     /// </summary>
-    [AddComponentMenu("DOTween/BF DOTween Animation")]
-    public class BFDOTweenAnimation : DOTweenAnimation
+    [AddComponentMenu("DOTween/Galaxy DOTween Animation")]
+    public class GalaxyDOTweenAnimation : DOTweenAnimation
     {
         public BFViewAnimType _BFViewAnimType;
 

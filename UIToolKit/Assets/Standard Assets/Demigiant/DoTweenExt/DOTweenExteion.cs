@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace DG.Tweening.RickExtension
+namespace DG.Tweening.GaExtention
 {
     public static class DOTweenExteion
     {
@@ -24,6 +22,13 @@ namespace DG.Tweening.RickExtension
             Debug.Log("CustomDoFade");
             return DOTween.To(sprite.AlphaGetter, sprite.AlphaSetter, endValue, duration);
         }
+
+        public static Tweener DOAnimation(this UIWidget sprite, float endValue, float duration)
+        {
+            Debug.Log("CustomDoFade");
+            return DOTween.To(sprite.AlphaGetter, sprite.AlphaSetter, endValue, duration);
+        }
+
 
         public static Tweener DOColor(this UISprite sprite, Color endValue, float duration)
         {
