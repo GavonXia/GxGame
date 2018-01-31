@@ -1,5 +1,8 @@
 Guide/Library
 Guide/Temp
+UIToolKit/Library
+UIToolKit/Temp
 .csproj
 .sln
 Guide/.vs
+UIToolKit/.vs
