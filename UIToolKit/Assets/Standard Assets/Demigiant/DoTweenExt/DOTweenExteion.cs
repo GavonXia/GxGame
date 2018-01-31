@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace DG.Tweening.GaExtention
@@ -23,13 +24,32 @@ namespace DG.Tweening.GaExtention
             return DOTween.To(sprite.AlphaGetter, sprite.AlphaSetter, endValue, duration);
         }
 
-        public static Tweener DOAnimation(this UIWidget sprite, float endValue, float duration)
+        public static Tweener DOAnimation(this Animation anim, string nameValue, float duration)
         {
-            Debug.Log("CustomDoFade");
-            return DOTween.To(sprite.AlphaGetter, sprite.AlphaSetter, endValue, duration);
+            Debug.Log("DOAnimation");
+            Tweener tween = DOTween.To(anim.AnimGetter, anim.AnimSetter, nameValue, duration);
+            tween.OnPlay(() =>
+            {
+                if (!anim) return;
+                if (anim.GetClip(nameValue))
+                {
+                    anim.CrossFade(nameValue, 0.1f);
+                }
+            });
+            return tween;
         }
 
-
+        public static Tweener DOAnimation(this Animator anim, string nameValue, float duration)
+        {
+            Debug.Log("DOAnimator  " + nameValue);
+            Tweener tween = DOTween.To(anim.AnimGetter, anim.AnimSetter, nameValue, duration);
+            tween.OnPlay( ()=> {
+                if (!anim) return;
+                anim.Play(nameValue);
+            });
+            return tween;
+        }
+        
         public static Tweener DOColor(this UISprite sprite, Color endValue, float duration)
         {
             Debug.Log("CustomDoColor");
@@ -100,6 +120,26 @@ namespace DG.Tweening.GaExtention
         private static Color ColorGetter(this UIWidget image)
         {
             return image.color;
+        }
+
+        private static void AnimSetter(this Animation anim, string animName)
+        {
+            return;
+        }
+
+        private static string AnimGetter(this Animation anim)
+        {
+            return "";
+        }
+
+        private static void AnimSetter(this Animator anim, string animName)
+        {
+            return;
+        }
+
+        private static string AnimGetter(this Animator anim)
+        {
+            return "";
         }
 
 

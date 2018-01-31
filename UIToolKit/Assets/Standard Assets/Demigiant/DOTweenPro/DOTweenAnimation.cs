@@ -16,10 +16,6 @@ using GA = DG.Tweening.GaExtention;
 #pragma warning disable 1591
 namespace DG.Tweening
 {
-    /// <summary>
-    /// Attach this to a GameObject to create a tween
-    /// </summary>
-    [AddComponentMenu("DOTween/DOTween Animation")]
     public class DOTweenAnimation : ABSAnimationComponent
     {
         public float delay;

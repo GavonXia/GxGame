@@ -59,6 +59,8 @@ namespace DG.DOTweenEditor
             { GA.DOTweenAnimationType.CameraPixelRect, new[] { typeof(Camera) } },
             { GA.DOTweenAnimationType.CameraRect, new[] { typeof(Camera) } },
             { GA.DOTweenAnimationType.UIWidthHeight, new[] { typeof(RectTransform) } },
+            { GA.DOTweenAnimationType.Animation,new[] { typeof(Animation)} },
+            { GA.DOTweenAnimationType.Animator,new[] { typeof(Animator)} },
         };
 
 #if DOTWEEN_TK2D
@@ -87,8 +89,18 @@ namespace DG.DOTweenEditor
             "UIWidthHeight",
             "Punch/Position", "Punch/Rotation", "Punch/Scale",
             "Shake/Position", "Shake/Rotation", "Shake/Scale",
-            "Camera/Aspect", "Camera/BackgroundColor", "Camera/FieldOfView", "Camera/OrthoSize", "Camera/PixelRect", "Camera/Rect"
+            "Camera/Aspect", "Camera/BackgroundColor", "Camera/FieldOfView", "Camera/OrthoSize", "Camera/PixelRect", "Camera/Rect",
+            "Animation",
+            "Animator"
         };
+
+        static readonly string[] _AnimationClipNames = new[] {
+            "none",
+            "appear","disappear",
+            "click",
+            "trigger",
+        };
+
         static string[] _animationTypeNoSlashes; // _AnimationType list without slashes in values
         static string[] _datString; // String representation of DOTweenAnimation enum (here for caching reasons)
 
@@ -272,6 +284,10 @@ namespace DG.DOTweenEditor
                     case GA.DOTweenAnimationType.CameraRect:
                         _src.endValueRect = new Rect(0, 0, 0, 0);
                         break;
+                    case GA.DOTweenAnimationType.Animation:
+                    case GA.DOTweenAnimationType.Animator:
+                        _src.endValueFloat = 0;
+                        break;
                 }
             }
             if (_src.animationType == GA.DOTweenAnimationType.None)
@@ -410,6 +426,11 @@ namespace DG.DOTweenEditor
                     GUIEndValueColor();
                     canBeRelative = false;
                     break;
+                case GA.DOTweenAnimationType.Animator:
+                case GA.DOTweenAnimationType.Animation:
+                    GUIEndValueAnimation();
+                    canBeRelative = false;
+                    break;
                 case GA.DOTweenAnimationType.Fade:
                     GUIEndValueFloat();
                     if (_src.endValueFloat < 0) _src.endValueFloat = 0;
@@ -518,7 +539,7 @@ namespace DG.DOTweenEditor
                     if (srcTarget != null)
                     {
                         _src.target = srcTarget;
-                        _src.targetType = DOTweenAnimation.TypeToDOTargetType(t);
+                        _src.targetType = GalaxyDOTweenAnimation.TypeToDOTargetType(t);
                         return true;
                     }
                 }
@@ -536,7 +557,6 @@ namespace DG.DOTweenEditor
         {
             return Array.IndexOf(_animationTypeNoSlashes, animation.ToString());
         }
-
         #endregion
 
         #region GUI Draw Methods
@@ -554,6 +574,18 @@ namespace DG.DOTweenEditor
             GUILayout.BeginHorizontal();
             GUIToFromButton();
             _src.endValueColor = EditorGUILayout.ColorField(_src.endValueColor);
+            GUILayout.EndHorizontal();
+        }
+        
+        void GUIEndValueAnimation()
+        {
+            GUILayout.BeginHorizontal();
+            //GUIToFromButton();
+            GUILayout.Label("Clip Name", GUILayout.Width(90));
+
+            _src.animClipIndex = EditorGUILayout.Popup(_src.animClipIndex, _AnimationClipNames);
+            _src.animName = _AnimationClipNames[_src.animClipIndex];
+
             GUILayout.EndHorizontal();
         }
 

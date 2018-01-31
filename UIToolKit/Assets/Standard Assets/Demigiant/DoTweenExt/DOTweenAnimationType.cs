@@ -24,6 +24,14 @@ namespace DG.Tweening.GaExtention
         CameraOrthoSize = 18,
         CameraPixelRect = 19,
         CameraRect = 20,
-        UIWidthHeight = 21
+        UIWidthHeight = 21,
+
+
+        // Gavon 2018/1/31 add for Animation
+
+        Animation = 22,
+        Animator = 23,
+
+
     }
 }

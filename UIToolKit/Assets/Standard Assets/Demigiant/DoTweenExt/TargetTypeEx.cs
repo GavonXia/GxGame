@@ -27,5 +27,8 @@
         UISprite = 100,
         UITexture = 101,
         UIWidget = 102,
+
+        Animation = 110,
+        Animator = 111,
     }
 }
