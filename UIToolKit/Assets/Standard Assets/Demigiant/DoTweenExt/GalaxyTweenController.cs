@@ -16,12 +16,17 @@ namespace DG.Tweening.GaExtention
     public class GalaxyTweenController : MonoBehaviour
     {
         public List<GalaxyDOTweenAnimation> m_animationList = new List<GalaxyDOTweenAnimation>();
-        public Transform m_Target;
+        public Transform m_target;
 
         private void Awake()
         {
-            m_animationList = new List<GalaxyDOTweenAnimation>(m_Target.GetComponentsInChildren<GalaxyDOTweenAnimation>(true));
+            if (m_target == null) {
+                m_target = transform;
+            }
+            m_animationList = new List<GalaxyDOTweenAnimation>(m_target.GetComponentsInChildren<GalaxyDOTweenAnimation>(true));
         }
+
+
     }
 
 }

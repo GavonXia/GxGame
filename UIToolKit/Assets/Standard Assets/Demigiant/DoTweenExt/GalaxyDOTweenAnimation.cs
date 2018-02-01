@@ -26,6 +26,10 @@ namespace DG.Tweening
     //}
     public class GalaxyDOTweenAnimation : ABSAnimationComponent
     {
+        // add
+        public EAnimTrigger _BFViewAnimType;
+
+
         public float delay;
         public float duration = 1;
         public Ease easeType = Ease.OutQuad;
@@ -623,9 +627,12 @@ namespace DG.Tweening
 
         #endregion
     }
-    public enum BFViewAnimType
+    public enum EAnimTrigger
     {
-
+        none,
+        enable,
+        disable,
+        click,
     }
 
 }

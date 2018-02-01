@@ -6,3 +6,7 @@ UIToolKit/Temp
 .sln
 Guide/.vs
 UIToolKit/.vs
+
+EventTest/Library
+EventTest/Temp
+EventTest/.vs
