@@ -27,7 +27,7 @@ namespace DG.Tweening
     public class GalaxyDOTweenAnimation : ABSAnimationComponent
     {
         // add
-        public EAnimTrigger _BFViewAnimType;
+        public EAnimTrigger animTrigger;
 
 
         public float delay;
