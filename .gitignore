@@ -6,10 +6,6 @@ Tools/UIToolKit/Library
 Tools/UIToolKit/Temp
 Tools/UIToolKit/.vs
 
-Guides/Guide/Library
-Guides/Guide/Temp
-Guides/Guide/.vs
-
 Tests/EventTest/Library
 Tests/EventTest/Temp
 Tests/EventTest/.vs
