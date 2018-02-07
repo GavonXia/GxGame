@@ -43,7 +43,8 @@ namespace DG.Tweening.GaExtention
         {
             Debug.Log("DOAnimator  " + nameValue);
             Tweener tween = DOTween.To(anim.AnimGetter, anim.AnimSetter, nameValue, duration);
-            tween.OnPlay( ()=> {
+            tween.OnPlay(() =>
+            {
                 if (!anim) return;
                 anim.Play(nameValue);
             });

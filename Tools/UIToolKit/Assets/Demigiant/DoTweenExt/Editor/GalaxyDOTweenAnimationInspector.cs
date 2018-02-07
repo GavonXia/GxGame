@@ -110,13 +110,15 @@ namespace DG.DOTweenEditor
         bool _isLightSrc; // Used to determine if we're tweening a Light, to set the max Fade value to more than 1
         ChooseTargetMode _chooseTargetMode = ChooseTargetMode.None;
 
-
+        SerializedProperty _animTrigger;
+        SerializedProperty _triggerStr;
         #region MonoBehaviour Methods
 
         void OnEnable()
         {
             _src = target as GalaxyDOTweenAnimation;
-
+            _animTrigger = serializedObject.FindProperty("animTrigger");
+            _triggerStr = serializedObject.FindProperty("triggerStr");
             onStartProperty = base.serializedObject.FindProperty("onStart");
             onPlayProperty = base.serializedObject.FindProperty("onPlay");
             onUpdateProperty = base.serializedObject.FindProperty("onUpdate");
@@ -164,6 +166,8 @@ namespace DG.DOTweenEditor
                 else
                 {
                     GUILayout.Space(8);
+
+
                     GUILayout.Label("Animation Editor disabled while in play mode", EditorGUIUtils.wordWrapLabelStyle);
                     if (!_src.isActive)
                     {
@@ -191,6 +195,7 @@ namespace DG.DOTweenEditor
                 GUILayout.Space(4);
                 DeGUILayout.Toolbar("Edit Mode Commands");
                 DeGUILayout.BeginVBox(DeGUI.styles.box.stickyTop);
+
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("TogglePause")) _src.tween.TogglePause();
                 if (GUILayout.Button("Rewind")) _src.tween.Rewind();
@@ -220,6 +225,11 @@ namespace DG.DOTweenEditor
                     }
                 }
             }
+
+
+            GUILayout.Space(4);
+            GUITrigger();
+            GUILayout.Space(4);
 
             GUILayout.BeginHorizontal();
             GA.DOTweenAnimationType prevAnimType = _src.animationType;
@@ -561,6 +571,20 @@ namespace DG.DOTweenEditor
 
         #region GUI Draw Methods
 
+        private void GUITrigger()
+        {
+            GUILayout.BeginHorizontal();
+            _src.animTrigger = (EAnimTrigger)EditorGUILayout.EnumPopup("Anim Trigger", _src.animTrigger);
+            GUILayout.EndHorizontal();
+
+            if (_src.animTrigger == EAnimTrigger.Trigger)
+            {
+                GUILayout.BeginHorizontal();
+                _src.triggerStr = GUILayout.TextField(_src.triggerStr);
+                GUILayout.EndHorizontal();
+            }
+        }
+
         void GUIEndValueFloat()
         {
             GUILayout.BeginHorizontal();
@@ -584,7 +608,15 @@ namespace DG.DOTweenEditor
             GUILayout.Label("Clip Name", GUILayout.Width(90));
 
             _src.animClipIndex = EditorGUILayout.Popup(_src.animClipIndex, _AnimationClipNames);
-            _src.animName = _AnimationClipNames[_src.animClipIndex];
+            
+            if (_src.animClipIndex != 4 /*"trigger"*/)
+            {
+                _src.animName = _AnimationClipNames[_src.animClipIndex];
+            }
+            else
+            {
+                _src.animName = _AnimationClipNames[_src.animClipIndex] + "_" + _src.triggerStr;
+            }
 
             GUILayout.EndHorizontal();
         }

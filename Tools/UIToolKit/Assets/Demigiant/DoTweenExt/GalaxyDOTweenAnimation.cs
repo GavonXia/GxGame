@@ -28,7 +28,7 @@ namespace DG.Tweening
     {
         // add
         public EAnimTrigger animTrigger;
-
+        public string triggerStr;
 
         public float delay;
         public float duration = 1;
@@ -81,8 +81,7 @@ namespace DG.Tweening
             {
                 // Don't create tweens if we're using a RectTransform as a Move target,
                 // because that will work only inside Start
-                CreateTween();
-                _tweenCreated = true;
+                //CreateTween();
             }
         }
 
@@ -90,8 +89,7 @@ namespace DG.Tweening
         {
             if (_tweenCreated || !isActive || !isValid) return;
 
-            CreateTween();
-            _tweenCreated = true;
+            //CreateTween();
         }
 
         void OnDestroy()
@@ -103,6 +101,7 @@ namespace DG.Tweening
         // Used also by DOTweenAnimationInspector when applying runtime changes and restarting
         public void CreateTween()
         {
+            _tweenCreated = true;
             if (target == null)
             {
                 Debug.LogWarning(string.Format("{0} :: This tween's target is NULL, because the animation was created with a DOTween Pro version older than 0.9.255. To fix this, exit Play mode then simply select this object, and it will update automatically", this.gameObject.name), this.gameObject);
@@ -450,17 +449,20 @@ namespace DG.Tweening
 
         public override void DOPlay()
         {
-            DOTween.Play(this.gameObject);
+            Tween t = this.tween;
+            if (t != null && t.IsInitialized()) t.Play();
         }
 
         public override void DOPlayBackwards()
         {
-            DOTween.PlayBackwards(this.gameObject);
+            Tween t = this.tween;
+            if (t != null) t.PlayBackwards();
         }
 
         public override void DOPlayForward()
         {
-            DOTween.PlayForward(this.gameObject);
+            Tween t = this.tween;
+            if (t != null) t.PlayForward();
         }
 
         public override void DOPause()
@@ -472,6 +474,13 @@ namespace DG.Tweening
         {
             DOTween.TogglePause(this.gameObject);
         }
+
+        public void DORewindEx()
+        {
+            _playCount = -1;
+            Tween t = this.tween;
+            if (t != null && t.IsInitialized()) t.Rewind();
+        } 
 
         public override void DORewind()
         {
@@ -627,12 +636,4 @@ namespace DG.Tweening
 
         #endregion
     }
-    public enum EAnimTrigger
-    {
-        none,
-        enable,
-        disable,
-        click,
-    }
-
 }

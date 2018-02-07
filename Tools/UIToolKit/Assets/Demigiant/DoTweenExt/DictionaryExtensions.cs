@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class DictionaryExtensions
 {
-    public static void ForceListAdd<K, V, T>(this Dictionary<K, V> dict, K key, T value, bool acceptSame = false) where V : List<T>
+    public static void ForceListAdd<K, V, T>(this Dictionary<K, V> dict, K key, T value, bool acceptSame = false) where V : List<T>, new()
     {
         bool shouldNewAdd = false;
         if (dict.ContainsKey(key))
@@ -33,7 +33,7 @@ public static class DictionaryExtensions
         }
         if (shouldNewAdd)
         {
-            V list = default(V);
+            V list = new V();
             list.Add(value);
             dict.Add(key, list);
         }
