@@ -424,11 +424,22 @@ static public class NGUIMath
 		return CalculateRelativeWidgetBounds(relativeTo, content, false);
 	}
 
-	/// <summary>
-	/// Calculate the combined bounds of all widgets attached to the specified game object or its children (in relative-to-object space).
-	/// </summary>
+    /// <summary>
+    /// added for not consider child 2018/2/7
+    /// </summary>
+    /// <param name="relativeTo"></param>
+    /// <param name="content"></param>
+    /// <returns></returns>
+    static public Bounds CalculateRelativeWidgetBoundsEx(Transform relativeTo, Transform content)
+    {
+        return CalculateRelativeWidgetBounds(relativeTo, content, false, false);
+    }
 
-	static public Bounds CalculateRelativeWidgetBounds (Transform relativeTo, Transform content, bool considerInactive, bool considerParents = true)
+    /// <summary>
+    /// Calculate the combined bounds of all widgets attached to the specified game object or its children (in relative-to-object space).
+    /// </summary>
+
+    static public Bounds CalculateRelativeWidgetBounds (Transform relativeTo, Transform content, bool considerInactive, bool considerParents = true)
 	{
 		if (content != null && relativeTo != null)
 		{
@@ -518,18 +529,18 @@ static public class NGUIMath
 		}
 	}
 
-	/// <summary>
-	/// This code is not framerate-independent:
-	/// 
-	/// target.position += velocity;
-	/// velocity = Vector3.Lerp(velocity, Vector3.zero, Time.deltaTime * 9f);
-	/// 
-	/// But this code is:
-	/// 
-	/// target.position += NGUIMath.SpringDampen(ref velocity, 9f, Time.deltaTime);
-	/// </summary>
+    /// <summary>
+    /// This code is not framerate-independent:
+    /// 
+    /// target.position += velocity;
+    /// velocity = Vector3.Lerp(velocity, Vector3.zero, Time.deltaTime * 9f);
+    /// 
+    /// But this code is:
+    /// 
+    /// target.position += NGUIMath.SpringDampen(ref velocity, 9f, Time.deltaTime);
+    /// </summary>
 
-	static public Vector3 SpringDampen (ref Vector3 velocity, float strength, float deltaTime)
+    static public Vector3 SpringDampen (ref Vector3 velocity, float strength, float deltaTime)
 	{
 		if (deltaTime > 1f) deltaTime = 1f;
 		float dampeningFactor = 1f - strength * 0.001f;

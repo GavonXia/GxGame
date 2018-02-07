@@ -184,9 +184,6 @@
     <Reference Include="UnityEngine.WindModule">
       <HintPath>D:/Program Files/Unity2017.2/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>D:/Program Files/Unity2017.2/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>

@@ -185,6 +185,24 @@ public class UIDragObject : MonoBehaviour
 		}
 	}
 
+    /// <summary>
+    /// add by gavon 2018/2/7 for adjust localposition by widget advanced
+    /// </summary>
+    public void ForceRefresh(bool shouldMove)
+    {
+        UIWidget wid = target.GetComponent<UIWidget>();
+        mBounds = NGUIMath.CalculateRelativeWidgetBoundsEx(panelRegion.cachedTransform, target);
+        // mBounds = wid.CalculateBounds();
+        Debug.Log(mBounds);
+        if (shouldMove)
+        {
+          //  mBounds = NGUIMath.CalculateRelativeWidgetBounds(panelRegion.cachedTransform, target);
+            if (panelRegion.ConstrainTargetToBounds(target, ref mBounds, true))
+                CancelMovement();
+        }
+    }
+    
+    private Vector3 m_lastHit;
 	/// <summary>
 	/// Drag the object along the plane.
 	/// </summary>
@@ -194,8 +212,8 @@ public class UIDragObject : MonoBehaviour
 		if (mPressed && mTouchID == UICamera.currentTouchID && enabled && NGUITools.GetActive(gameObject) && target != null)
 		{
 			UICamera.currentTouch.clickNotification = UICamera.ClickNotification.BasedOnDelta;
-
-			Ray ray = UICamera.currentCamera.ScreenPointToRay(UICamera.currentTouch.pos);
+            m_lastHit = UICamera.currentTouch.pos;
+            Ray ray = UICamera.currentCamera.ScreenPointToRay(UICamera.currentTouch.pos);
 			float dist = 0f;
 
 			if (mPlane.Raycast(ray, out dist))
