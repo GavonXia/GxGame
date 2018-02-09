@@ -1,14 +1,65 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine.Events;
 
 namespace GaGyroscope
 {
     public class GyroscopeInput
     {
-        public class OnScrollHandle : UnityEvent<Vector3> { }
+        public class OnScrollHandle
+        {
+            // 一定要解开注销
+            private List<Transform> m_handleList = new List<Transform>();
+
+            public void AddListener(Transform target)
+            {
+                if (target && !m_handleList.Contains(target))
+                {
+                    m_handleList.Add(target);
+                }
+            }
+
+            public void RemoveListener(Transform target)
+            {
+                if (target && m_handleList.Contains(target))
+                {
+                    m_handleList.Remove(target);
+                }
+            }
+
+            public void Invoke(Vector3 position, Quaternion rotation, float deltaTime)
+            {
+                for (int i = 0; i < m_handleList.Count; i++)
+                {
+                    Transform tran = m_handleList[i];
+                    if (tran)
+                    {
+                        InvokeSingle(tran, position, rotation, deltaTime);
+                    }
+                    else
+                    {
+                        m_handleList.Remove(tran);
+                    }
+                }
+            }
+
+            private void InvokeSingle(Transform tager, Vector3 position, Quaternion rotation, float deltaTime)
+            {
+                if (MotionMode == EMotionMode.Postion)
+                {
+                    tager.transform.localPosition = Vector3.Lerp(tager.transform.localPosition, position, deltaTime);
+                }
+                else if (MotionMode == EMotionMode.Rotation)
+                {
+                    tager.transform.localRotation = Quaternion.Lerp(tager.transform.localRotation, rotation, deltaTime);
+                }
+                else
+                {
+                    tager.transform.localPosition = Vector3.Lerp(tager.transform.localPosition, position, deltaTime);
+                    tager.transform.localRotation = Quaternion.Lerp(tager.transform.localRotation, rotation, deltaTime);
+                }
+            }
+        }
 
         public static OnScrollHandle OnScroll
         {
@@ -26,7 +77,7 @@ namespace GaGyroscope
         {
             get
             {
-                return m_enable && (IsSystemSupports || IgnoreSystem);
+                return m_enable && (IsSystemSupports || UseEditor);
             }
 
             set
@@ -43,82 +94,151 @@ namespace GaGyroscope
             }
         }
 
-        public static bool IgnoreSystem
+        public static bool UseEditor
         {
             get
             {
-                return m_ignoreSystem;
+                return m_useEditor;
             }
 
             set
             {
-                m_ignoreSystem = value;
+                m_useEditor = value;
             }
         }
 
-        public static bool IgnoreSystem1
+        public static float Sensitivity
         {
             get
             {
-                return m_ignoreSystem;
+                return m_sensitivity;
             }
 
             set
             {
-                m_ignoreSystem = value;
+                m_sensitivity = value;
             }
         }
 
-        public static float Sensitive
+        public static float MaxMoveSpeed
         {
             get
             {
-                return m_sensitive;
+                return maxMoveSpeed;
             }
 
             set
             {
-                m_sensitive = value;
+                maxMoveSpeed = value;
             }
         }
 
-        public static float LerpIntensity
+        public static float MaxTiltSpeed
         {
             get
             {
-                return m_lerpIntensity;
+                return maxTiltSpeed;
             }
 
             set
             {
-                m_lerpIntensity = value;
+                maxTiltSpeed = value;
             }
         }
 
-        public static Vector3 IgnoreGrad
+        public static float PosRate
         {
             get
             {
-                return m_ignoreGrad;
+                return posRate;
             }
 
             set
             {
-                m_ignoreGrad = value;
+                posRate = value;
             }
         }
 
-        public static void SimulateInput(Vector3 delta)
+        public static EMotionAxial MotionAxial1
         {
-            OnScroll.Invoke(delta);
+            get
+            {
+                return m_motionAxial1;
+            }
+
+            set
+            {
+                m_motionAxial1 = value;
+            }
+        }
+
+        public static EMotionAxial MotionAxial2
+        {
+            get
+            {
+                return m_motionAxial2;
+            }
+
+            set
+            {
+                m_motionAxial2 = value;
+            }
+        }
+
+        public static EMotionMode MotionMode
+        {
+            get
+            {
+                return m_motionMode;
+            }
+
+            set
+            {
+                m_motionMode = value;
+            }
+        }
+
+        public static void OnScrollInput(Vector3 delta)
+        {
+            //if (Enable)
+            //{
+            //    OnScroll.Invoke(delta);
+            //}
         }
 
         private static OnScrollHandle m_onScroll;
+        private static OnScrollHandle m_onScrollRotation;
         private static bool m_enable = true;
-        private static bool m_ignoreSystem = true;
-        private static float m_sensitive = 1f;
-        private static float m_lerpIntensity = 1f;
-        private static Vector3 m_ignoreGrad = new Vector3(0.1f, 0.1f, 0.1f);
+        [Tooltip("敏感度")]
+        private static bool m_useEditor = true;
+        [Tooltip("敏感度")]
+        private static float m_sensitivity = 15f;
+        [Tooltip("最大水平移动速度")]
+        private static float maxMoveSpeed = 35f;
+        [Tooltip("最大垂直傾斜角移动速度")]
+        private static float maxTiltSpeed = 35f;
+        [Tooltip("位移加成速率")]
+        private static float posRate = 1.5f;
 
+        private static EMotionAxial m_motionAxial1 = EMotionAxial.y;
+        private static EMotionAxial m_motionAxial2 = EMotionAxial.None;
+        private static EMotionMode m_motionMode = EMotionMode.Rotation;   //运动模式
+
+    }
+
+    public enum EMotionAxial
+    {
+        All = 1,  //全部轴
+        None = 2,
+        x = 3,
+        y = 4,
+        z = 5
+    }
+
+    public enum EMotionMode
+    {
+        Postion = 1,   //只是位置辩护
+        Rotation = 2,
+        All = 3    //全部变化
     }
 }
