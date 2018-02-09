@@ -8,6 +8,9 @@ Tools/UIToolKit/.vs
 Tools/GaGyroscope/Library
 Tools/GaGyroscope/Temp
 Tools/GaGyroscope/.vs
+Tools/Extensions/Library
+Tools/Extensions/Temp
+Tools/Extensions/.vs
 
 Tests/EventTest/Library
 Tests/EventTest/Temp
