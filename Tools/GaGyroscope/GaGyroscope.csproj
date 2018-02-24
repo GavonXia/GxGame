@@ -228,6 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\src\DictionaryExtensions.cs" />
+    <Compile Include="Assets\src\GyroObj.cs" />
     <Compile Include="Assets\src\GyroscopeInput.cs" />
     <Compile Include="Assets\src\MobileScreenOrientation.cs" />
   </ItemGroup>

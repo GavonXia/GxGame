@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GaGame.Extension
 {
-    public static class LinqExtension
+    public static class ListExtension
     {
         public static bool None<T>(this IEnumerable<T> source)
         {

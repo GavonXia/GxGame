@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,7 +8,7 @@ namespace GaGame.Extension
 {
     public static class DictionaryExtension
     {
-        public static void ForceListAdd<K, V, T>(this Dictionary<K, V> dict, K key, T value, bool acceptSame = false) where V : List<T>, new()
+        public static void ForceAddList<K, V, T>(this Dictionary<K, V> dict, K key, T value, bool acceptSame = false) where V : List<T>, new()
         {
             bool shouldNewAdd = false;
             if (dict.ContainsKey(key))
@@ -189,6 +191,17 @@ namespace GaGame.Extension
             dict.Add(pair.Key, pair.Value);
         }
 
+        /// <summary>
+        /// Increment counter at the key passed as argument. Dictionary is <TKey, Int> 
+        /// Example:
+        /// var animalQuantities = new Dictionary<string, int>();
+        /// animalQuantities.IncrementAt("cat");
+        /// animalQuantities.IncrementAt("cat");
+        /// Console.WriteLine(animalQuantities["cat"]); // 2
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dictionary"></param>
+        /// <param name="index"></param>
         public static void IncrementAt<T>(this Dictionary<T, int> dictionary, T index)
         {
             int count = 0;
@@ -197,6 +210,62 @@ namespace GaGame.Extension
 
             dictionary[index] = ++count;
         }
+
+        /// <summary>
+        /// Converts Enumeration type into a dictionary of names and values
+        /// Example: 
+        /// var dictionary = typeof(UriFormat).EnumToDictionary();
+        /// </summary>
+        /// <param name="t">Enum type</param>
+        public static IDictionary<string, int> EnumToDictionary(this Type t)
+        {
+            if (t == null) throw new NullReferenceException();
+            if (!t.IsEnum) throw new InvalidCastException("object is not an Enumeration");
+
+            string[] names = Enum.GetNames(t);
+            Array values = Enum.GetValues(t);
+
+            return (from i in Enumerable.Range(0, names.Length)
+                    select new { Key = names[i], Value = (int)values.GetValue(i) })
+                        .ToDictionary(k => k.Key, k => k.Value);
+        }
+
+        /// <summary>
+        /// Converts an enumeration of groupings into a Dictionary of those groupings.
+        /// Dictionary<string,List<Product>> results = productList.GroupBy(product => product.Category).ToDictionary();
+        /// </summary>
+        /// <typeparam name="TKey">Key type of the grouping and dictionary.</typeparam>
+        /// <typeparam name="TValue">Element type of the grouping and dictionary list.</typeparam>
+        /// <param name="groupings">The enumeration of groupings from a GroupBy() clause.</param>
+        /// <returns>A dictionary of groupings such that the key of the dictionary is TKey type and the value is List of TValue type.</returns>
+        public static Dictionary<TKey, List<TValue>> ToDictionary<TKey, TValue>(this IEnumerable<IGrouping<TKey, TValue>> groupings)
+        {
+            return groupings.ToDictionary(group => group.Key, group => group.ToList());
+        }
+        
+        /// <summary>
+        /// Converts a hashtable to a generic ditionary
+        /// Example:
+        /// Hashtable t1 = new Hashtable();
+        /// t1.Add("pi", Math.PI);
+        /// t1.Add("e", Math.E);
+        /// var col = t1.Upgrade<string, double>();
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key in the hashtable</typeparam>
+        /// <typeparam name="TValue">The type of the object in the hashtable</typeparam>
+        /// <param name="t">The hashtable</param>
+        /// <returns></returns>
+        public static Dictionary<TKey, TValue> Upgrade<TKey, TValue>(this Hashtable t)
+        {
+            var dic = new Dictionary<TKey, TValue>();
+
+            foreach (DictionaryEntry entry in t)
+            {
+                dic.Add((TKey)entry.Key, (TValue)entry.Value);
+            }
+            return dic;
+        }
+
     }
 }
 
