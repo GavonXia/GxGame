@@ -9,9 +9,9 @@ namespace GaGyroscope
         public class OnScrollHandle
         {
             // 一定要解开注销
-            private List<Transform> m_handleList = new List<Transform>();
+            private List<GyroObj> m_handleList = new List<GyroObj>();
 
-            public void AddListener(Transform target)
+            public void AddListener(GyroObj target)
             {
                 if (target && !m_handleList.Contains(target))
                 {
@@ -19,7 +19,7 @@ namespace GaGyroscope
                 }
             }
 
-            public void RemoveListener(Transform target)
+            public void RemoveListener(GyroObj target)
             {
                 if (target && m_handleList.Contains(target))
                 {
@@ -27,14 +27,14 @@ namespace GaGyroscope
                 }
             }
 
-            public void Invoke(Vector3 position, Quaternion rotation, float deltaTime)
+            public void Update(Vector3 position, Vector3 rotationVec, float deltaTime)
             {
                 for (int i = 0; i < m_handleList.Count; i++)
                 {
-                    Transform tran = m_handleList[i];
+                    GyroObj tran = m_handleList[i];
                     if (tran)
                     {
-                        InvokeSingle(tran, position, rotation, deltaTime);
+                        tran.UpdateGyro(position, rotationVec, deltaTime);
                     }
                     else
                     {
@@ -43,22 +43,22 @@ namespace GaGyroscope
                 }
             }
 
-            private void InvokeSingle(Transform tager, Vector3 position, Quaternion rotation, float deltaTime)
-            {
-                if (MotionMode == EMotionMode.Postion)
-                {
-                    tager.transform.localPosition = Vector3.Lerp(tager.transform.localPosition, position, deltaTime);
-                }
-                else if (MotionMode == EMotionMode.Rotation)
-                {
-                    tager.transform.localRotation = Quaternion.Lerp(tager.transform.localRotation, rotation, deltaTime);
-                }
-                else
-                {
-                    tager.transform.localPosition = Vector3.Lerp(tager.transform.localPosition, position, deltaTime);
-                    tager.transform.localRotation = Quaternion.Lerp(tager.transform.localRotation, rotation, deltaTime);
-                }
-            }
+        //    private void InvokeSingle(Transform tager, Vector3 position, Quaternion rotation, float deltaTime)
+        //    {
+        //        if (MotionMode == EMotionMode.Postion)
+        //        {
+        //            tager.transform.localPosition = Vector3.Lerp(tager.transform.localPosition, position, deltaTime);
+        //        }
+        //        else if (MotionMode == EMotionMode.Rotation)
+        //        {
+        //            tager.transform.localRotation = Quaternion.Lerp(tager.transform.localRotation, rotation, deltaTime);
+        //        }
+        //        else
+        //        {
+        //            tager.transform.localPosition = Vector3.Lerp(tager.transform.localPosition, position, deltaTime);
+        //            tager.transform.localRotation = Quaternion.Lerp(tager.transform.localRotation, rotation, deltaTime);
+        //        }
+        //    }
         }
 
         public static OnScrollHandle OnScroll
@@ -198,18 +198,24 @@ namespace GaGyroscope
             }
         }
 
-        public static void OnScrollInput(Vector3 delta)
+        public static Vector3 EditorInput
         {
-            //if (Enable)
-            //{
-            //    OnScroll.Invoke(delta);
-            //}
+            get
+            {
+                return m_editorInput;
+            }
+
+            set
+            {
+                m_editorInput = value;
+            }
         }
+        
 
         private static OnScrollHandle m_onScroll;
         private static OnScrollHandle m_onScrollRotation;
         private static bool m_enable = true;
-        [Tooltip("敏感度")]
+        [Tooltip("是否允许本地调试")]
         private static bool m_useEditor = true;
         [Tooltip("敏感度")]
         private static float m_sensitivity = 15f;
@@ -221,9 +227,10 @@ namespace GaGyroscope
         private static float posRate = 1.5f;
 
         private static EMotionAxial m_motionAxial1 = EMotionAxial.y;
-        private static EMotionAxial m_motionAxial2 = EMotionAxial.None;
-        private static EMotionMode m_motionMode = EMotionMode.Rotation;   //运动模式
+        private static EMotionAxial m_motionAxial2 = EMotionAxial.x;
+        private static EMotionMode m_motionMode = EMotionMode.All;   //运动模式
 
+        private static Vector3 m_editorInput = Vector3.zero;
     }
 
     public enum EMotionAxial
@@ -237,6 +244,7 @@ namespace GaGyroscope
 
     public enum EMotionMode
     {
+        None = 0,
         Postion = 1,   //只是位置辩护
         Rotation = 2,
         All = 3    //全部变化
